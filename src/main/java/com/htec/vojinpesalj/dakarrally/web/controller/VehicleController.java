@@ -8,8 +8,10 @@ import java.net.URISyntaxException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +34,20 @@ public class VehicleController {
 
         return ResponseEntity.created(new URI(String.format("/api/vehicles/%d", vehicle.getId())))
                 .body(vehicle);
+    }
+
+    @PutMapping("/vehicles/{id}")
+    public ResponseEntity<VehicleResponse> update(
+            @PathVariable Long id, @Valid @RequestBody VehicleRequest vehicleRequest) {
+        VehicleResponse vehicle = vehicleService.update(vehicleRequest, id);
+
+        return ResponseEntity.ok(vehicle);
+    }
+
+    @DeleteMapping("/vehicles/{id}")
+    public ResponseEntity<VehicleResponse> delete(@PathVariable Long id) {
+        vehicleService.delete(id);
+
+        return ResponseEntity.ok().build();
     }
 }
