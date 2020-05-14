@@ -47,7 +47,7 @@ public class VehicleController {
     }
 
     @GetMapping("vehicles/{vehicleId}/statistic")
-    public ResponseEntity<VehicleStatisticResponse> getLeaderboard(@PathVariable Long vehicleId) {
+    public ResponseEntity<VehicleStatisticResponse> getStatistic(@PathVariable Long vehicleId) {
         VehicleStatisticResponse vehicleStatistic = vehicleService.getStatistic(vehicleId);
 
         return ResponseEntity.ok(vehicleStatistic);

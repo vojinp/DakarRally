@@ -2,10 +2,9 @@ package com.htec.vojinpesalj.dakarrally.web.controller;
 
 import com.htec.vojinpesalj.dakarrally.service.RaceService;
 import com.htec.vojinpesalj.dakarrally.service.dto.RaceResponse;
-import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
+import com.htec.vojinpesalj.dakarrally.service.dto.RaceStatisticResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,5 +39,12 @@ public class RaceController {
         raceService.startRace(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/statistic")
+    public ResponseEntity<RaceStatisticResponse> getStatus(@PathVariable Long id) {
+        RaceStatisticResponse raceStatisticResponse = raceService.getStatistic(id);
+
+        return ResponseEntity.ok(raceStatisticResponse);
     }
 }

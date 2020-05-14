@@ -17,5 +17,5 @@ public class VehicleStatisticResponse {
     private Double distance;
     private Date finishTime;
     private Collection<Date> lightMalfunctions;
-    private VehicleStatus status;
+    private VehicleStatusDto status;
 }

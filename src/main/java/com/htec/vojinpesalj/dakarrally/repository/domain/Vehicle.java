@@ -36,7 +36,7 @@ public abstract class Vehicle {
 
     @NotNull private Date manufacturingDate;
 
-    @Column(name="vehicle_type", insertable = false, updatable = false)
+    @Column(name = "vehicle_type", insertable = false, updatable = false)
     private String vehicleType;
 
     @NotNull
@@ -130,5 +130,13 @@ public abstract class Vehicle {
 
     public void setVehicleStatistic(VehicleStatistic vehicleStatistic) {
         this.vehicleStatistic = vehicleStatistic;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 }
