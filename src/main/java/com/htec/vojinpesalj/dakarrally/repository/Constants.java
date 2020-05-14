@@ -48,8 +48,10 @@ public final class Constants {
                 "Can't update vehicle with id: %d while race is running.";
     }
 
-    public static class VehicleThreadInfo {
+    public static class ThreadInfo {
         public static final Integer SLEEP_TIME = 1000;
         public static final Integer HOUR_IN_MS = 3600000;
+        public static final Integer CORE_POOL_SIZE = 10;
+        public static final Integer MAX_POOL_SIZE = 10;
     }
 }

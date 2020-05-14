@@ -11,9 +11,15 @@ import com.htec.vojinpesalj.dakarrally.service.VehicleFactory;
 import com.htec.vojinpesalj.dakarrally.service.VehicleService;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
+import com.htec.vojinpesalj.dakarrally.service.dto.VehicleTypeDto;
 import com.htec.vojinpesalj.dakarrally.service.mappers.VehicleMapper;
 import com.htec.vojinpesalj.dakarrally.service.simulator.RaceSimulationService;
+import com.htec.vojinpesalj.dakarrally.service.simulator.VehicleSimulatorThread;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,8 +85,28 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<VehicleResponse> getLeaderboard(Long raceId) {
-        List<Vehicle> vehicles = vehicleRepository.findAll();
-        return null;
+    public List<VehicleResponse> getLeaderboard(Long raceId, VehicleTypeDto type) {
+        List<Vehicle> vehicles =
+                Optional.ofNullable(type)
+                        .map(t -> vehicleRepository.findByRaceIdAndVehicleType(raceId, t.name()))
+                        .orElseGet(() -> vehicleRepository.findByRaceId(raceId));
+
+        vehicleRepository.findByRaceId(raceId);
+        Map<Long, VehicleSimulatorThread> vehicleSimulators =
+                raceSimulationService.getRaceSimulation(raceId).getVehicleSimulators();
+        vehicles.forEach(
+                v ->
+                        v.getVehicleStatistic()
+                                .setDistance(
+                                        vehicleSimulators
+                                                .get(v.getId())
+                                                .getVehicle()
+                                                .getVehicleStatistic()
+                                                .getDistance()));
+        vehicles.sort(
+                Comparator.comparing((Vehicle v) -> v.getVehicleStatistic().getDistance())
+                        .reversed());
+
+        return vehicles.stream().map(vehicleMapper::toDto).collect(Collectors.toList());
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -34,6 +35,9 @@ public abstract class Vehicle {
     @NotBlank private String model;
 
     @NotNull private Date manufacturingDate;
+
+    @Column(name="vehicle_type", insertable = false, updatable = false)
+    private String vehicleType;
 
     @NotNull
     @ManyToOne

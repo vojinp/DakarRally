@@ -1,7 +1,7 @@
 package com.htec.vojinpesalj.dakarrally.service.simulator;
 
 import com.htec.vojinpesalj.dakarrally.repository.Constants;
-import com.htec.vojinpesalj.dakarrally.repository.Constants.VehicleThreadInfo;
+import com.htec.vojinpesalj.dakarrally.repository.Constants.ThreadInfo;
 import com.htec.vojinpesalj.dakarrally.repository.VehicleRepository;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
 import com.htec.vojinpesalj.dakarrally.repository.domain.VehicleStatistic;
@@ -10,20 +10,28 @@ import java.util.Date;
 import java.util.Random;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Data
+@Component
+@Scope("prototype")
 public class VehicleSimulatorThread extends Thread {
-    @Autowired
     private VehicleRepository vehicleRepository;
     private Vehicle vehicle;
     private Boolean vehicleRemovedFromRace;
     private Random random;
 
-    public VehicleSimulatorThread(Vehicle vehicle) {
+    @Autowired
+    public VehicleSimulatorThread(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
         this.random = new Random();
         this.vehicleRemovedFromRace = false;
-        this.vehicle = vehicle;
         setDaemon(true);
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
     private Boolean isFinished() {
@@ -41,15 +49,15 @@ public class VehicleSimulatorThread extends Thread {
             // Calculating the distance that vehicle traveled every second
             vehicleStatistic.setDistance(
                     vehicleStatistic.getDistance()
-                            + vehicle.getMaxSpeed()
-                                    / (VehicleThreadInfo.HOUR_IN_MS
-                                            / VehicleThreadInfo.SLEEP_TIME));
+                            + (double) vehicle.getMaxSpeed()
+                                    / (ThreadInfo.HOUR_IN_MS
+                                            / ThreadInfo.SLEEP_TIME));
 
             // Calculating possibility of light malfunction every second
             double lightMalfunctionProbability =
                     vehicle.getProbabilityOfLightMalfunction()
-                            / ((double) VehicleThreadInfo.HOUR_IN_MS
-                                    / VehicleThreadInfo.SLEEP_TIME);
+                            / ((double) ThreadInfo.HOUR_IN_MS
+                                    / ThreadInfo.SLEEP_TIME);
 
             if (random.nextDouble() <= lightMalfunctionProbability) {
                 vehicleStatistic.setStatus(VehicleStatus.LIGHT_MALFUNCTIONED);
@@ -60,8 +68,8 @@ public class VehicleSimulatorThread extends Thread {
             // Calculating possibility of heavy malfunction every second
             double heavyMalfunctionProbability =
                     vehicle.getProbabilityOfHeavyMalfunction()
-                            / ((double) VehicleThreadInfo.HOUR_IN_MS
-                                    / VehicleThreadInfo.SLEEP_TIME);
+                            / ((double) ThreadInfo.HOUR_IN_MS
+                                    / ThreadInfo.SLEEP_TIME);
 
             if (random.nextDouble() <= heavyMalfunctionProbability) {
                 vehicleStatistic.setStatus(VehicleStatus.HEAVY_MALFUNCTIONED);
@@ -70,14 +78,14 @@ public class VehicleSimulatorThread extends Thread {
 
             if (vehicleStatistic.getStatus() == VehicleStatus.LIGHT_MALFUNCTIONED) {
                 try {
-                    Thread.sleep(vehicle.getRepairmentTime() * VehicleThreadInfo.HOUR_IN_MS);
+                    Thread.sleep(vehicle.getRepairmentTime() * ThreadInfo.HOUR_IN_MS);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e.getMessage());
                 }
             }
 
             try {
-                Thread.sleep(VehicleThreadInfo.SLEEP_TIME);
+                Thread.sleep(ThreadInfo.SLEEP_TIME);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
             }

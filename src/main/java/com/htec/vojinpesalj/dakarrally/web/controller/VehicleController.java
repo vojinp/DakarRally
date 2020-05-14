@@ -3,6 +3,7 @@ package com.htec.vojinpesalj.dakarrally.web.controller;
 import com.htec.vojinpesalj.dakarrally.service.VehicleService;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
+import com.htec.vojinpesalj.dakarrally.service.dto.VehicleTypeDto;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -53,9 +55,10 @@ public class VehicleController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/vehicles/leaderboard")
-    public ResponseEntity<List<VehicleResponse>> getLeaderboard(@PathVariable Long raceId) {
-        List<VehicleResponse> leaderboard = vehicleService.getLeaderboard(raceId);
+    @GetMapping("races/{raceId}/vehicles/leaderboard")
+    public ResponseEntity<List<VehicleResponse>> getLeaderboard(
+            @RequestParam(required = false) VehicleTypeDto type, @PathVariable Long raceId) {
+        List<VehicleResponse> leaderboard = vehicleService.getLeaderboard(raceId, type);
 
         return ResponseEntity.ok(leaderboard);
     }
