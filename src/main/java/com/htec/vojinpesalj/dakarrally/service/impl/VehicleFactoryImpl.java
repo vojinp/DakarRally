@@ -7,6 +7,7 @@ import com.htec.vojinpesalj.dakarrally.repository.domain.SportsCar;
 import com.htec.vojinpesalj.dakarrally.repository.domain.TerrainCar;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Truck;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
+import com.htec.vojinpesalj.dakarrally.repository.domain.VehicleStatistic;
 import com.htec.vojinpesalj.dakarrally.service.VehicleFactory;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class VehicleFactoryImpl implements VehicleFactory {
                 .teamName(vehicle.getTeamName())
                 .model(vehicle.getModel())
                 .manufacturingDate(vehicle.getManufacturingDate())
+                .vehicleStatistic(new VehicleStatistic())
                 .build();
     }
 
@@ -43,6 +45,7 @@ public class VehicleFactoryImpl implements VehicleFactory {
                 .teamName(vehicle.getTeamName())
                 .model(vehicle.getModel())
                 .manufacturingDate(vehicle.getManufacturingDate())
+                .vehicleStatistic(new VehicleStatistic())
                 .build();
     }
 
@@ -51,6 +54,7 @@ public class VehicleFactoryImpl implements VehicleFactory {
                 .teamName(vehicle.getTeamName())
                 .model(vehicle.getModel())
                 .manufacturingDate(vehicle.getManufacturingDate())
+                .vehicleStatistic(new VehicleStatistic())
                 .build();
     }
 
@@ -59,6 +63,7 @@ public class VehicleFactoryImpl implements VehicleFactory {
                 .teamName(vehicle.getTeamName())
                 .model(vehicle.getModel())
                 .manufacturingDate(vehicle.getManufacturingDate())
+                .vehicleStatistic(new VehicleStatistic())
                 .build();
     }
 
@@ -67,6 +72,7 @@ public class VehicleFactoryImpl implements VehicleFactory {
                 .teamName(vehicle.getTeamName())
                 .model(vehicle.getModel())
                 .manufacturingDate(vehicle.getManufacturingDate())
+                .vehicleStatistic(new VehicleStatistic())
                 .build();
     }
 }

@@ -15,8 +15,12 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue(value = VehicleTypes.TERRAIN_CAR)
 public class TerrainCar extends Car {
     @Builder
-    public TerrainCar(String teamName, String model, Date manufacturingDate) {
-        super(teamName, model, manufacturingDate);
+    public TerrainCar(
+            String teamName,
+            String model,
+            Date manufacturingDate,
+            VehicleStatistic vehicleStatistic) {
+        super(teamName, model, manufacturingDate, vehicleStatistic);
     }
 
     @Override

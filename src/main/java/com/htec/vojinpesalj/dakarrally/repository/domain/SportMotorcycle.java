@@ -15,13 +15,17 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue(value = VehicleTypes.SPORT_MOTORCYCLE)
 public class SportMotorcycle extends Motorcycle {
     @Builder
-    public SportMotorcycle(String teamName, String model, Date manufacturingDate) {
-        super(teamName, model, manufacturingDate);
+    public SportMotorcycle(
+            String teamName,
+            String model,
+            Date manufacturingDate,
+            VehicleStatistic vehicleStatistic) {
+        super(teamName, model, manufacturingDate, vehicleStatistic);
     }
 
     @Override
     public Integer getMaxSpeed() {
-        return MaxSpeeds.SPORT_MOTORCYCLE_MAX_SPEDD;
+        return MaxSpeeds.SPORT_MOTORCYCLE_MAX_SPEED;
     }
 
     @Override

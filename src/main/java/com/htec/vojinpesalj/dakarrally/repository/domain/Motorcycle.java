@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @DiscriminatorValue(value = VehicleTypes.MOTORCYCLE)
 public abstract class Motorcycle extends Vehicle {
-    public Motorcycle(String teamName, String model, Date manufacturingDate) {
-        super(teamName, model, manufacturingDate);
+    public Motorcycle(
+            String teamName,
+            String model,
+            Date manufacturingDate,
+            VehicleStatistic vehicleStatistic) {
+        super(teamName, model, manufacturingDate, vehicleStatistic);
     }
 }

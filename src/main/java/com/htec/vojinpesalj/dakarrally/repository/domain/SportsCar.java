@@ -16,8 +16,12 @@ import lombok.NoArgsConstructor;
 public class SportsCar extends Car {
 
     @Builder
-    public SportsCar(String teamName, String model, Date manufacturingDate) {
-        super(teamName, model, manufacturingDate);
+    public SportsCar(
+            String teamName,
+            String model,
+            Date manufacturingDate,
+            VehicleStatistic vehicleStatistic) {
+        super(teamName, model, manufacturingDate, vehicleStatistic);
     }
 
     @Override

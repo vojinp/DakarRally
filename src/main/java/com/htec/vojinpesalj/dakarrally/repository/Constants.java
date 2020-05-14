@@ -1,12 +1,14 @@
 package com.htec.vojinpesalj.dakarrally.repository;
 
 public final class Constants {
+    public static final Integer RACE_DISTANCE = 10000;
+
     public static class MaxSpeeds {
         public static final Integer SPORTS_CAR_MAX_SPEED = 140;
         public static final Integer TERRAIN_CAR_MAX_SPEED = 100;
         public static final Integer TRUCK_MAX_SPEED = 80;
         public static final Integer CROSS_MOTORCYCLE_MAX_SPEED = 85;
-        public static final Integer SPORT_MOTORCYCLE_MAX_SPEDD = 130;
+        public static final Integer SPORT_MOTORCYCLE_MAX_SPEED = 130;
     }
 
     public static class MalfunctionRepairmentsTime {
@@ -42,5 +44,12 @@ public final class Constants {
         public static final String VEHICLE_TYPE_NOT_SUPPORTED = "Vehicle type is not supported.";
         public static final String RACE_STATUS_NOT_SUPPORTED = "Race status is not supported.";
         public static final String ENTITY_WITH_ID_NOT_FOUND = "%s with id: %d was not found.";
+        public static final String CANT_UPDATE_VEHICLE =
+                "Can't update vehicle with id: %d while race is running.";
+    }
+
+    public static class VehicleThreadInfo {
+        public static final Integer SLEEP_TIME = 1000;
+        public static final Integer HOUR_IN_MS = 3600000;
     }
 }

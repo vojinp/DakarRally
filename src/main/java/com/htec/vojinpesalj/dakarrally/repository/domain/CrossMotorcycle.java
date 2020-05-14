@@ -15,8 +15,12 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue(value = VehicleTypes.CROSS_MOTORCYCLE)
 public class CrossMotorcycle extends Motorcycle {
     @Builder
-    public CrossMotorcycle(String teamName, String model, Date manufacturingDate) {
-        super(teamName, model, manufacturingDate);
+    public CrossMotorcycle(
+            String teamName,
+            String model,
+            Date manufacturingDate,
+            VehicleStatistic vehicleStatistic) {
+        super(teamName, model, manufacturingDate, vehicleStatistic);
     }
 
     @Override
