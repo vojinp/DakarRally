@@ -22,4 +22,6 @@ public class VehicleResponse {
     @NotNull private Date manufacturingDate;
 
     @NotNull private VehicleTypeDto type;
+
+    @NotNull private VehicleStatisticResponse vehicleStatisticResponse;
 }

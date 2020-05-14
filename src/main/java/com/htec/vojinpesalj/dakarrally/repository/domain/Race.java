@@ -1,8 +1,8 @@
 package com.htec.vojinpesalj.dakarrally.repository.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Date;
 import java.util.Collection;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,6 +26,7 @@ public class Race {
     @Id @GeneratedValue private Long id;
 
     @NotNull private Integer year;
+    @NotNull private Date startDate;
 
     @NotNull
     @Enumerated(EnumType.STRING)

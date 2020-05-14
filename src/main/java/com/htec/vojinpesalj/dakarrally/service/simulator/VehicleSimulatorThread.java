@@ -6,13 +6,15 @@ import com.htec.vojinpesalj.dakarrally.repository.VehicleRepository;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
 import com.htec.vojinpesalj.dakarrally.repository.domain.VehicleStatistic;
 import com.htec.vojinpesalj.dakarrally.repository.domain.VehicleStatus;
+import java.util.Date;
 import java.util.Random;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 public class VehicleSimulatorThread extends Thread {
-    @Autowired private VehicleRepository vehicleRepository;
+    @Autowired
+    private VehicleRepository vehicleRepository;
     private Vehicle vehicle;
     private Boolean vehicleRemovedFromRace;
     private Random random;
@@ -24,13 +26,16 @@ public class VehicleSimulatorThread extends Thread {
         setDaemon(true);
     }
 
-    public Boolean isFinishedOrOut() {
-        return vehicle.getVehicleStatistic().getDistance() > Constants.RACE_DISTANCE
-                || vehicle.getVehicleStatistic().getStatus() == VehicleStatus.HEAVY_MALFUNCTIONED;
+    private Boolean isFinished() {
+        return vehicle.getVehicleStatistic().getDistance() > Constants.RACE_DISTANCE;
+    }
+
+    private Boolean isHeavyMalfunctioned() {
+        return vehicle.getVehicleStatistic().getStatus() == VehicleStatus.HEAVY_MALFUNCTIONED;
     }
 
     public void run() {
-        while (!isFinishedOrOut() && !vehicleRemovedFromRace) {
+        while (!isFinished() && !isHeavyMalfunctioned() && !vehicleRemovedFromRace) {
             VehicleStatistic vehicleStatistic = vehicle.getVehicleStatistic();
 
             // Calculating the distance that vehicle traveled every second
@@ -48,6 +53,7 @@ public class VehicleSimulatorThread extends Thread {
 
             if (random.nextDouble() <= lightMalfunctionProbability) {
                 vehicleStatistic.setStatus(VehicleStatus.LIGHT_MALFUNCTIONED);
+                vehicleStatistic.getLightMalfunctions().add(new Date());
                 vehicleRepository.save(vehicle);
             }
 
@@ -75,6 +81,10 @@ public class VehicleSimulatorThread extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e.getMessage());
             }
+        }
+        if (isFinished()) {
+            vehicle.getVehicleStatistic().setFinishTime(new Date());
+            vehicleRepository.save(vehicle);
         }
         System.out.println("VEHICLE FINISHED!");
     }

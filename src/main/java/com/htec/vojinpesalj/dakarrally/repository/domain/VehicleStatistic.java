@@ -1,5 +1,8 @@
 package com.htec.vojinpesalj.dakarrally.repository.domain;
 
+import java.util.Collection;
+import java.util.Date;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,8 +19,10 @@ import lombok.Data;
 public class VehicleStatistic {
     @Id @GeneratedValue private Long id;
     private Double distance;
-    private Double finishTime;
+    private Date finishTime;
     private VehicleStatus status;
+
+    @ElementCollection private Collection<Date> lightMalfunctions;
 
     public VehicleStatistic() {
         distance = 0.0;

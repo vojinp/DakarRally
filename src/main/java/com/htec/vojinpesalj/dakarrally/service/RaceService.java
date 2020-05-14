@@ -6,4 +6,6 @@ public interface RaceService {
     RaceResponse create(Integer year);
 
     void startRace(Long id);
+
+    void finishRace(Long id);
 }

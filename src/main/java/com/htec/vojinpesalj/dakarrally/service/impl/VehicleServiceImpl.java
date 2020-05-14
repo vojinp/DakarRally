@@ -7,12 +7,13 @@ import com.htec.vojinpesalj.dakarrally.repository.RaceRepository;
 import com.htec.vojinpesalj.dakarrally.repository.VehicleRepository;
 import com.htec.vojinpesalj.dakarrally.repository.domain.RaceStatus;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
-import com.htec.vojinpesalj.dakarrally.service.simulator.RaceSimulationService;
 import com.htec.vojinpesalj.dakarrally.service.VehicleFactory;
 import com.htec.vojinpesalj.dakarrally.service.VehicleService;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
 import com.htec.vojinpesalj.dakarrally.service.mappers.VehicleMapper;
+import com.htec.vojinpesalj.dakarrally.service.simulator.RaceSimulationService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +76,11 @@ public class VehicleServiceImpl implements VehicleService {
         if (vehicle.getRace().getStatus() == RaceStatus.RUNNING) {
             raceSimulationService.removeVehicleFromRace(vehicle, vehicle.getRace().getId());
         }
+    }
+
+    @Override
+    public List<VehicleResponse> getLeaderboard(Long raceId) {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        return null;
     }
 }

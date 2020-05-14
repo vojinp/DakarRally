@@ -5,10 +5,12 @@ import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,5 +51,12 @@ public class VehicleController {
         vehicleService.delete(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/vehicles/leaderboard")
+    public ResponseEntity<List<VehicleResponse>> getLeaderboard(@PathVariable Long raceId) {
+        List<VehicleResponse> leaderboard = vehicleService.getLeaderboard(raceId);
+
+        return ResponseEntity.ok(leaderboard);
     }
 }
