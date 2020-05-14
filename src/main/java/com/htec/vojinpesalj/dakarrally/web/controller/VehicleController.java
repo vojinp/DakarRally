@@ -3,6 +3,7 @@ package com.htec.vojinpesalj.dakarrally.web.controller;
 import com.htec.vojinpesalj.dakarrally.service.VehicleService;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
+import com.htec.vojinpesalj.dakarrally.service.dto.VehicleStatisticResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleTypeDto;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,16 +31,6 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-    @PostMapping("/races/{raceId}/vehicles")
-    public ResponseEntity<VehicleResponse> create(
-            @PathVariable Long raceId, @Valid @RequestBody VehicleRequest vehicleRequest)
-            throws URISyntaxException {
-        VehicleResponse vehicle = vehicleService.create(vehicleRequest, raceId);
-
-        return ResponseEntity.created(new URI(String.format("/api/vehicles/%d", vehicle.getId())))
-                .body(vehicle);
-    }
-
     @PutMapping("/vehicles/{id}")
     public ResponseEntity<VehicleResponse> update(
             @PathVariable Long id, @Valid @RequestBody VehicleRequest vehicleRequest) {
@@ -53,6 +44,23 @@ public class VehicleController {
         vehicleService.delete(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("vehicles/{vehicleId}/statistic")
+    public ResponseEntity<VehicleStatisticResponse> getLeaderboard(@PathVariable Long vehicleId) {
+        VehicleStatisticResponse vehicleStatistic = vehicleService.getStatistic(vehicleId);
+
+        return ResponseEntity.ok(vehicleStatistic);
+    }
+
+    @PostMapping("/races/{raceId}/vehicles")
+    public ResponseEntity<VehicleResponse> create(
+            @PathVariable Long raceId, @Valid @RequestBody VehicleRequest vehicleRequest)
+            throws URISyntaxException {
+        VehicleResponse vehicle = vehicleService.create(vehicleRequest, raceId);
+
+        return ResponseEntity.created(new URI(String.format("/api/vehicles/%d", vehicle.getId())))
+                .body(vehicle);
     }
 
     @GetMapping("races/{raceId}/vehicles/leaderboard")

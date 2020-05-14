@@ -11,8 +11,10 @@ import com.htec.vojinpesalj.dakarrally.service.VehicleFactory;
 import com.htec.vojinpesalj.dakarrally.service.VehicleService;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
+import com.htec.vojinpesalj.dakarrally.service.dto.VehicleStatisticResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleTypeDto;
 import com.htec.vojinpesalj.dakarrally.service.mappers.VehicleMapper;
+import com.htec.vojinpesalj.dakarrally.service.mappers.VehicleStatisticMapper;
 import com.htec.vojinpesalj.dakarrally.service.simulator.RaceSimulationService;
 import com.htec.vojinpesalj.dakarrally.service.simulator.VehicleSimulatorThread;
 import java.util.Comparator;
@@ -28,6 +30,7 @@ public class VehicleServiceImpl implements VehicleService {
     private VehicleRepository vehicleRepository;
     private VehicleFactory vehicleFactory;
     private VehicleMapper vehicleMapper;
+    private VehicleStatisticMapper vehicleStatisticMapper;
     private RaceRepository raceRepository;
     private RaceSimulationService raceSimulationService;
 
@@ -36,11 +39,13 @@ public class VehicleServiceImpl implements VehicleService {
             VehicleRepository vehicleRepository,
             VehicleFactory vehicleFactory,
             VehicleMapper vehicleMapper,
+            VehicleStatisticMapper vehicleStatisticMapper,
             RaceRepository raceRepository,
             RaceSimulationService raceSimulationService) {
         this.vehicleRepository = vehicleRepository;
         this.vehicleFactory = vehicleFactory;
         this.vehicleMapper = vehicleMapper;
+        this.vehicleStatisticMapper = vehicleStatisticMapper;
         this.raceRepository = raceRepository;
         this.raceSimulationService = raceSimulationService;
     }
@@ -108,5 +113,20 @@ public class VehicleServiceImpl implements VehicleService {
                         .reversed());
 
         return vehicles.stream().map(vehicleMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public VehicleStatisticResponse getStatistic(Long id) {
+        Vehicle vehicle =
+                vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        Map<Long, VehicleSimulatorThread> vehicleSimulators =
+                raceSimulationService
+                        .getRaceSimulation(vehicle.getRace().getId())
+                        .getVehicleSimulators();
+        vehicle.getVehicleStatistic()
+                .setDistance(
+                        vehicleSimulators.get(id).getVehicle().getVehicleStatistic().getDistance());
+
+        return vehicleStatisticMapper.toDto(vehicle.getVehicleStatistic());
     }
 }
