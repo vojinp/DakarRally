@@ -28,11 +28,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class VehicleServiceImpl implements VehicleService {
     private VehicleRepository vehicleRepository;
     private VehicleFactory vehicleFactory;
@@ -64,9 +66,10 @@ public class VehicleServiceImpl implements VehicleService {
                 raceRepository
                         .findById(raceId)
                         .orElseThrow(() -> new RaceNotFoundException(raceId)));
-        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+        Vehicle newVehicle = vehicleRepository.save(vehicle);
+        log.info(String.format("Saved vehicle with id: %d to database.", newVehicle.getId()));
 
-        return vehicleMapper.toDto(savedVehicle);
+        return vehicleMapper.toDto(newVehicle);
     }
 
     @Override
@@ -81,6 +84,7 @@ public class VehicleServiceImpl implements VehicleService {
         newVehicle.setRace(vehicle.getRace());
         newVehicle.setId(id);
         vehicleRepository.save(newVehicle);
+        log.info(String.format("Saved race with id: %d to database.", newVehicle.getId()));
 
         return vehicleMapper.toDto(newVehicle);
     }
@@ -89,6 +93,8 @@ public class VehicleServiceImpl implements VehicleService {
     public void delete(Long id) {
         Vehicle vehicle = getByIdOrThrow(id);
         vehicleRepository.deleteById(id);
+        log.info(String.format("Deleted vehicle with id: %d from the database.", id));
+
         if (vehicle.getRace().getStatus() == RaceStatus.RUNNING) {
             raceSimulationService.removeVehicleFromRace(vehicle, vehicle.getRace().getId());
         }
@@ -100,6 +106,7 @@ public class VehicleServiceImpl implements VehicleService {
                 Optional.ofNullable(type)
                         .map(t -> vehicleRepository.findByRaceIdAndVehicleType(raceId, t.name()))
                         .orElseGet(() -> vehicleRepository.findByRaceId(raceId));
+        log.info(String.format("Fetched vehicles with race id: %d from the database.", raceId));
 
         vehicleRepository.findByRaceId(raceId);
         Map<Long, VehicleSimulatorThread> vehicleSimulators =
@@ -166,6 +173,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private Vehicle getByIdOrThrow(Long id) {
-        return vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        Vehicle vehicle =  vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        log.info(String.format("Fetched vehicle with id: %d from the database.", id));
+
+        return vehicle;
     }
 }

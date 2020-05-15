@@ -4,37 +4,45 @@ import com.htec.vojinpesalj.dakarrally.repository.Constants.ThreadInfo;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Race;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
 import com.htec.vojinpesalj.dakarrally.service.RaceService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 @Data
 @Component
 @Scope("prototype")
+@Log4j2
 public class RaceSimulatorThread extends Thread {
     private RaceService raceService;
     private Map<Long, VehicleSimulatorThread> vehicleSimulators;
+    private List<Future> threadDoneCheck;
     private Long raceId;
-    private TaskExecutor taskExecutor;
+    private ThreadPoolTaskExecutor taskExecutor;
     private ApplicationContext applicationContext;
 
     @Autowired
     public RaceSimulatorThread(
             RaceService raceService,
-            TaskExecutor taskExecutor,
+            ThreadPoolTaskExecutor taskExecutor,
             ApplicationContext applicationContext) {
         this.raceService = raceService;
         this.taskExecutor = taskExecutor;
         this.applicationContext = applicationContext;
+        threadDoneCheck = new ArrayList<>();
         setDaemon(true);
     }
 
     public void setRace(Race race) {
+        log.info(String.format("Initialized thread with raceId: %d.", race.getId()));
         this.vehicleSimulators =
                 race.getVehicles().stream()
                         .map(this::mapAndStartThread)
@@ -44,7 +52,12 @@ public class RaceSimulatorThread extends Thread {
     }
 
     public void run() {
-        vehicleSimulators.values().forEach(VehicleSimulatorThread::start);
+        log.info(String.format("Started thread with raceId: %d.", raceId));
+        try {
+            Thread.sleep(ThreadInfo.SLEEP_TIME);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         while (!allVehiclesFinished()) {
             try {
                 Thread.sleep(ThreadInfo.SLEEP_TIME);
@@ -53,13 +66,13 @@ public class RaceSimulatorThread extends Thread {
             }
         }
         raceService.finishRace(raceId);
-        System.out.println("RACE IS DONE!");
+        log.info(String.format("Race with id: %d has finished.", raceId));
     }
 
     private Boolean allVehiclesFinished() {
-        return vehicleSimulators.values().stream()
-                .map(VehicleSimulatorThread::isAlive)
-                .allMatch(isAlive -> isAlive == Boolean.FALSE);
+        return threadDoneCheck.stream()
+                .map(Future::isDone)
+                .allMatch(isDone -> isDone == Boolean.TRUE);
     }
 
     public void removeVehicleFromRace(Vehicle vehicle) {
@@ -71,7 +84,7 @@ public class RaceSimulatorThread extends Thread {
         VehicleSimulatorThread vehicleSimulatorThread =
                 applicationContext.getBean(VehicleSimulatorThread.class);
         vehicleSimulatorThread.setVehicle(vehicle);
-        taskExecutor.execute(vehicleSimulatorThread);
+        threadDoneCheck.add(taskExecutor.submit(vehicleSimulatorThread));
 
         return vehicleSimulatorThread;
     }

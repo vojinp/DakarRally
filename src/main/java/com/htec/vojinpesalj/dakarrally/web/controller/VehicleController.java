@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import javax.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@Log4j2
 public class VehicleController {
     private VehicleService vehicleService;
 
@@ -35,6 +37,7 @@ public class VehicleController {
     @PutMapping("/vehicles/{id}")
     public ResponseEntity<VehicleResponse> update(
             @PathVariable Long id, @Valid @RequestBody VehicleRequest vehicleRequest) {
+        log.info(String.format("PUT /api/vehicles/%d", id));
         VehicleResponse vehicle = vehicleService.update(vehicleRequest, id);
 
         return ResponseEntity.ok(vehicle);
@@ -42,6 +45,7 @@ public class VehicleController {
 
     @DeleteMapping("/vehicles/{id}")
     public ResponseEntity<VehicleResponse> delete(@PathVariable Long id) {
+        log.info(String.format("DELETE /api/vehicles/%d", id));
         vehicleService.delete(id);
 
         return ResponseEntity.ok().build();
@@ -50,6 +54,7 @@ public class VehicleController {
     @PutMapping("vehicles/filter")
     public ResponseEntity<List<VehicleResponse>> finVehicle(
             @Valid @RequestBody FindVehicleRequest findVehicleRequest) {
+        log.info("PUT /api/vehicles/filter");
         List<VehicleResponse> vehicles = vehicleService.findVehicle(findVehicleRequest);
 
         return ResponseEntity.ok(vehicles);
@@ -57,6 +62,7 @@ public class VehicleController {
 
     @GetMapping("vehicles/{vehicleId}/statistic")
     public ResponseEntity<VehicleStatisticResponse> getStatistic(@PathVariable Long vehicleId) {
+        log.info(String.format("GET /api/vehicles/%d/statistic", vehicleId));
         VehicleStatisticResponse vehicleStatistic = vehicleService.getStatistic(vehicleId);
 
         return ResponseEntity.ok(vehicleStatistic);
@@ -66,6 +72,7 @@ public class VehicleController {
     public ResponseEntity<VehicleResponse> create(
             @PathVariable Long raceId, @Valid @RequestBody VehicleRequest vehicleRequest)
             throws URISyntaxException {
+        log.info(String.format("POST /api/races/%d/vehicles", raceId));
         VehicleResponse vehicle = vehicleService.create(vehicleRequest, raceId);
 
         return ResponseEntity.created(new URI(String.format("/api/vehicles/%d", vehicle.getId())))
@@ -75,6 +82,7 @@ public class VehicleController {
     @GetMapping("races/{raceId}/vehicles/leaderboard")
     public ResponseEntity<List<VehicleResponse>> getLeaderboard(
             @RequestParam(required = false) VehicleTypeDto type, @PathVariable Long raceId) {
+        log.info(String.format("GET /api/races/%d/vehicles/leaderboard", raceId));
         List<VehicleResponse> leaderboard = vehicleService.getLeaderboard(raceId, type);
 
         return ResponseEntity.ok(leaderboard);

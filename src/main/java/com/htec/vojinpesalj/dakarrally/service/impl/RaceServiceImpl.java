@@ -20,11 +20,12 @@ import com.htec.vojinpesalj.dakarrally.service.simulator.RaceSimulationService;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class RaceServiceImpl implements RaceService {
     private RaceRepository raceRepository;
     private RaceMapper raceMapper;
@@ -51,7 +52,10 @@ public class RaceServiceImpl implements RaceService {
         Race race =
                 Race.builder().year(year).status(RaceStatus.PENDING).startDate(new Date()).build();
 
-        return raceMapper.toDto(raceRepository.save(race));
+        Race newRace = raceRepository.save(race);
+        log.info(String.format("Saved race with id: %d to database.", newRace.getId()));
+
+        return raceMapper.toDto(newRace);
     }
 
     @Override
@@ -62,6 +66,7 @@ public class RaceServiceImpl implements RaceService {
         }
         race.setStatus(RaceStatus.RUNNING);
         raceRepository.save(race);
+        log.info(String.format("Saved race with id: %d to database.", race.getId()));
         raceSimulationService.addRace(race);
     }
 
@@ -70,6 +75,7 @@ public class RaceServiceImpl implements RaceService {
         Race race = getByIdOrThrowException(id);
         race.setStatus(RaceStatus.FINISHED);
         raceRepository.save(race);
+        log.info(String.format("Saved race with id: %d to database.", race.getId()));
     }
 
     @Override
@@ -104,6 +110,9 @@ public class RaceServiceImpl implements RaceService {
     }
 
     private Race getByIdOrThrowException(Long id) {
-        return raceRepository.findById(id).orElseThrow(() -> new RaceNotFoundException(id));
+        Race race =  raceRepository.findById(id).orElseThrow(() -> new RaceNotFoundException(id));
+        log.info(String.format("Fetched race with id: %d from the database.", id));
+
+        return race;
     }
 }

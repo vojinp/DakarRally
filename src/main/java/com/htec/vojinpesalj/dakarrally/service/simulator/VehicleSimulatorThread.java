@@ -9,6 +9,7 @@ import com.htec.vojinpesalj.dakarrally.repository.domain.VehicleStatus;
 import java.util.Date;
 import java.util.Random;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @Scope("prototype")
+@Log4j2
 public class VehicleSimulatorThread extends Thread {
     private VehicleRepository vehicleRepository;
     private Vehicle vehicle;
@@ -31,6 +33,8 @@ public class VehicleSimulatorThread extends Thread {
     }
 
     public void setVehicle(Vehicle vehicle) {
+        log.info(String.format("Initialized thread with vehicleId: %d.", vehicle.getId()));
+
         this.vehicle = vehicle;
     }
 
@@ -43,6 +47,8 @@ public class VehicleSimulatorThread extends Thread {
     }
 
     public void run() {
+        log.info(String.format("Started thread with vehicleId: %d.", vehicle.getId()));
+
         while (!isFinished() && !isHeavyMalfunctioned() && !vehicleRemovedFromRace) {
             VehicleStatistic vehicleStatistic = vehicle.getVehicleStatistic();
 
@@ -50,16 +56,15 @@ public class VehicleSimulatorThread extends Thread {
             vehicleStatistic.setDistance(
                     vehicleStatistic.getDistance()
                             + (double) vehicle.getMaxSpeed()
-                                    / (ThreadInfo.HOUR_IN_MS
-                                            / ThreadInfo.SLEEP_TIME));
+                                    / (ThreadInfo.HOUR_IN_MS / ThreadInfo.SLEEP_TIME));
 
             // Calculating possibility of light malfunction every second
             double lightMalfunctionProbability =
                     vehicle.getProbabilityOfLightMalfunction()
-                            / ((double) ThreadInfo.HOUR_IN_MS
-                                    / ThreadInfo.SLEEP_TIME);
+                            / ((double) ThreadInfo.HOUR_IN_MS / ThreadInfo.SLEEP_TIME);
 
             if (random.nextDouble() <= lightMalfunctionProbability) {
+                log.info(String.format("Vehicle with id: %d has light malfunction.", vehicle.getId()));
                 vehicleStatistic.setStatus(VehicleStatus.LIGHT_MALFUNCTIONED);
                 vehicleStatistic.getLightMalfunctions().add(new Date());
                 vehicleRepository.save(vehicle);
@@ -68,10 +73,10 @@ public class VehicleSimulatorThread extends Thread {
             // Calculating possibility of heavy malfunction every second
             double heavyMalfunctionProbability =
                     vehicle.getProbabilityOfHeavyMalfunction()
-                            / ((double) ThreadInfo.HOUR_IN_MS
-                                    / ThreadInfo.SLEEP_TIME);
+                            / ((double) ThreadInfo.HOUR_IN_MS / ThreadInfo.SLEEP_TIME);
 
             if (random.nextDouble() <= heavyMalfunctionProbability) {
+                log.info(String.format("Vehicle with id: %d has heavy malfunction.", vehicle.getId()));
                 vehicleStatistic.setStatus(VehicleStatus.HEAVY_MALFUNCTIONED);
                 vehicleRepository.save(vehicle);
             }
@@ -94,10 +99,12 @@ public class VehicleSimulatorThread extends Thread {
             vehicle.getVehicleStatistic().setFinishTime(new Date());
             vehicleRepository.save(vehicle);
         }
-        System.out.println("VEHICLE FINISHED!");
+        log.info(String.format("Vehicle with id: %d has finished the race.", vehicle.getId()));
     }
 
     public void removeFromRace() {
+        log.info(String.format("Vehicle with id: %d has been removed from the race.", vehicle.getId()));
+
         this.vehicleRemovedFromRace = true;
     }
 }
