@@ -151,23 +151,9 @@ public class VehicleServiceImpl implements VehicleService {
                                                                         .get(i)
                                                                         .getValue()
                                                                         .split("::")),
-                                                        findVehicleRequest
-                                                                .getFilterValues()
-                                                                .get(i))))
+                                                        findVehicleRequest.getFilterValues().get(i),
+                                                        findVehicleRequest.getSortBy().getValue())))
                         .collect(Collectors.toList());
-
-        //        VehicleSpecification specification1 =
-        //                new VehicleSpecification(
-        //                        new SearchCriteria(Arrays.asList("model".split(",")), "model"));
-        //        VehicleSpecification specification2 =
-        //                new VehicleSpecification(
-        //                        new SearchCriteria(Arrays.asList("teamName".split(",")), "team
-        // 2"));
-        //        List<VehicleSpecification> specs = new ArrayList<>();
-        //        specs.add(specification1);
-        //        specs.add(specification2);
-        //        List<String> operations = Collections.singletonList("OR");
-
         Specification<Vehicle> vehicleSpecification =
                 vehicleSpecifications.stream().findFirst().orElse(null);
         for (int i = 0; i <= vehicleSpecifications.size() - 2; i++) {
@@ -176,6 +162,7 @@ public class VehicleServiceImpl implements VehicleService {
                             ? vehicleSpecification.and(vehicleSpecifications.get(i + 1))
                             : vehicleSpecification.or(vehicleSpecifications.get(i + 1));
         }
+
         List<Vehicle> vehicles = vehicleRepository.findAll(vehicleSpecification);
 
         return vehicles.stream().map(vehicleMapper::toDto).collect(Collectors.toList());

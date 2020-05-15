@@ -19,6 +19,7 @@ public class VehicleSpecification implements Specification<Vehicle> {
     @Override
     public Predicate toPredicate(
             Root<Vehicle> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(searchCriteria.getSortBy())));
         return criteriaBuilder.equal(getPath(root), searchCriteria.getValue());
     }
 
