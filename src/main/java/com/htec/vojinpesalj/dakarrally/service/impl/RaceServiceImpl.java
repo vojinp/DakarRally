@@ -2,12 +2,12 @@ package com.htec.vojinpesalj.dakarrally.service.impl;
 
 import static java.util.stream.Collectors.groupingBy;
 
+import com.htec.vojinpesalj.dakarrally.exception.RaceAlreadyStartedException;
 import com.htec.vojinpesalj.dakarrally.exception.RaceNotFoundException;
 import com.htec.vojinpesalj.dakarrally.repository.RaceRepository;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Race;
 import com.htec.vojinpesalj.dakarrally.repository.domain.RaceStatus;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
-import com.htec.vojinpesalj.dakarrally.repository.domain.VehicleStatus;
 import com.htec.vojinpesalj.dakarrally.service.RaceService;
 import com.htec.vojinpesalj.dakarrally.service.dto.RaceResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.RaceStatisticResponse;
@@ -47,7 +47,6 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
-    @Transactional
     public RaceResponse create(Integer year) {
         Race race =
                 Race.builder().year(year).status(RaceStatus.PENDING).startDate(new Date()).build();
@@ -56,16 +55,17 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
-    @Transactional
     public void startRace(Long id) {
         Race race = getByIdOrThrowException(id);
+        if (race.getStatus() != RaceStatus.PENDING) {
+            throw new RaceAlreadyStartedException(id);
+        }
         race.setStatus(RaceStatus.RUNNING);
         raceRepository.save(race);
         raceSimulationService.addRace(race);
     }
 
     @Override
-    @Transactional
     public void finishRace(Long id) {
         Race race = getByIdOrThrowException(id);
         race.setStatus(RaceStatus.FINISHED);

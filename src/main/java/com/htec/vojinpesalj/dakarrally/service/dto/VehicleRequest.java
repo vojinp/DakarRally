@@ -14,13 +14,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VehicleRequest {
-    @NotBlank private String teamName;
+    @NotBlank(message = "VehicleRequest.teamName cannot be null or empty.")
+    private String teamName;
 
-    @NotBlank private String model;
+    @NotBlank(message = "VehicleRequest.model cannot be null or empty.")
+    private String model;
 
-    @NotNull
+    @NotNull(message = "VehicleRequest.manufacturingDate cannot be null.")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date manufacturingDate;
 
-    @NotNull private VehicleTypeDto type;
+    @NotNull(message = "VehicleRequest.type cannot be null.")
+    private VehicleTypeDto type;
 }

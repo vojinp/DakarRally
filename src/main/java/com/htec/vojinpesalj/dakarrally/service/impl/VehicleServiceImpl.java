@@ -71,8 +71,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleResponse update(VehicleRequest vehicleRequest, Long id) {
-        Vehicle vehicle =
-                vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        Vehicle vehicle = getByIdOrThrow(id);
 
         if (vehicle.getRace().getStatus() != RaceStatus.PENDING) {
             throw new CantUpdateVehicleException(id);
@@ -88,8 +87,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void delete(Long id) {
-        Vehicle vehicle =
-                vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        Vehicle vehicle = getByIdOrThrow(id);
         vehicleRepository.deleteById(id);
         if (vehicle.getRace().getStatus() == RaceStatus.RUNNING) {
             raceSimulationService.removeVehicleFromRace(vehicle, vehicle.getRace().getId());
@@ -124,8 +122,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleStatisticResponse getStatistic(Long id) {
-        Vehicle vehicle =
-                vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        Vehicle vehicle = getByIdOrThrow(id);
         Map<Long, VehicleSimulatorThread> vehicleSimulators =
                 raceSimulationService
                         .getRaceSimulation(vehicle.getRace().getId())
@@ -166,5 +163,9 @@ public class VehicleServiceImpl implements VehicleService {
         List<Vehicle> vehicles = vehicleRepository.findAll(vehicleSpecification);
 
         return vehicles.stream().map(vehicleMapper::toDto).collect(Collectors.toList());
+    }
+
+    private Vehicle getByIdOrThrow(Long id) {
+        return vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
     }
 }

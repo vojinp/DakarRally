@@ -46,6 +46,7 @@ public final class Constants {
         public static final String ENTITY_WITH_ID_NOT_FOUND = "%s with id: %d was not found.";
         public static final String CANT_UPDATE_VEHICLE =
                 "Can't update vehicle with id: %d while race is running.";
+        public static final String RACE_ALREADY_STARTED = "Race with id: %d already started.";
     }
 
     public static class ThreadInfo {
