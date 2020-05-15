@@ -1,6 +1,7 @@
 package com.htec.vojinpesalj.dakarrally.web.controller;
 
 import com.htec.vojinpesalj.dakarrally.service.VehicleService;
+import com.htec.vojinpesalj.dakarrally.service.dto.FindVehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleStatisticResponse;
@@ -44,6 +45,14 @@ public class VehicleController {
         vehicleService.delete(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("vehicles/filter")
+    public ResponseEntity<List<VehicleResponse>> finVehicle(
+            @Valid @RequestBody FindVehicleRequest findVehicleRequest) {
+        List<VehicleResponse> vehicles = vehicleService.findVehicle(findVehicleRequest);
+
+        return ResponseEntity.ok(vehicles);
     }
 
     @GetMapping("vehicles/{vehicleId}/statistic")

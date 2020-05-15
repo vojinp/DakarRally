@@ -1,5 +1,6 @@
 package com.htec.vojinpesalj.dakarrally.service;
 
+import com.htec.vojinpesalj.dakarrally.service.dto.FindVehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleStatisticResponse;
@@ -16,4 +17,6 @@ public interface VehicleService {
     List<VehicleResponse> getLeaderboard(Long raceId, VehicleTypeDto type);
 
     VehicleStatisticResponse getStatistic(Long vehicleId);
+
+    List<VehicleResponse> findVehicle(FindVehicleRequest findVehicleRequest);
 }
