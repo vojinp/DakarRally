@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
@@ -59,6 +60,7 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
+    @Transactional
     public void startRace(Long id) {
         Race race = getByIdOrThrowException(id);
         if (race.getStatus() != RaceStatus.PENDING) {
@@ -71,6 +73,7 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
+    @Transactional
     public void finishRace(Long id) {
         Race race = getByIdOrThrowException(id);
         race.setStatus(RaceStatus.FINISHED);
