@@ -6,7 +6,7 @@ public enum FilterKeys {
     MANUFACTURING_DATE("manufacturingDate"),
     STATUS("vehicleStatistic::status");
 
-    private String value;
+    private final String value;
 
     FilterKeys(String value) {
         this.value = value;

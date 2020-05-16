@@ -27,11 +27,11 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class RaceServiceImpl implements RaceService {
-    private RaceRepository raceRepository;
-    private RaceMapper raceMapper;
-    private RaceStatusMapper raceStatusMapper;
-    private RaceSimulationService raceSimulationService;
-    private VehicleStatusMapper vehicleStatusMapper;
+    private final RaceRepository raceRepository;
+    private final RaceMapper raceMapper;
+    private final RaceStatusMapper raceStatusMapper;
+    private final RaceSimulationService raceSimulationService;
+    private final VehicleStatusMapper vehicleStatusMapper;
 
     @Autowired
     public RaceServiceImpl(

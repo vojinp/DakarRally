@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RaceMapperImpl implements RaceMapper {
-    private RaceStatusMapper raceStatusMapper;
+    private final RaceStatusMapper raceStatusMapper;
 
     @Autowired
     public RaceMapperImpl(RaceStatusMapper raceStatusMapper) {

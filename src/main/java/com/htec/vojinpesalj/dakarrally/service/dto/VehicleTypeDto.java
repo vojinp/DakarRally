@@ -9,7 +9,7 @@ public enum VehicleTypeDto {
     CROSS_MOTORCYCLE("CrossMotorcycle"),
     SPORT_MOTORCYCLE("SportMotorcycle");
 
-    private String text;
+    private final String text;
 
     VehicleTypeDto(String text) {
         this.text = text;

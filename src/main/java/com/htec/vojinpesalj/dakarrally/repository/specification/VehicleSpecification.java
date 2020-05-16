@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class VehicleSpecification implements Specification<Vehicle> {
 
-    private SearchCriteria searchCriteria;
+    private final SearchCriteria searchCriteria;
 
     public VehicleSpecification(SearchCriteria searchCriteria) {
         this.searchCriteria = searchCriteria;

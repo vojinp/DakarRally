@@ -36,12 +36,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class VehicleServiceImpl implements VehicleService {
-    private VehicleRepository vehicleRepository;
-    private VehicleFactory vehicleFactory;
-    private VehicleMapper vehicleMapper;
-    private VehicleStatisticMapper vehicleStatisticMapper;
-    private RaceRepository raceRepository;
-    private RaceSimulationService raceSimulationService;
+    private final VehicleRepository vehicleRepository;
+    private final VehicleFactory vehicleFactory;
+    private final VehicleMapper vehicleMapper;
+    private final VehicleStatisticMapper vehicleStatisticMapper;
+    private final RaceRepository raceRepository;
+    private final RaceSimulationService raceSimulationService;
 
     @Autowired
     public VehicleServiceImpl(

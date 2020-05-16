@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 @Log4j2
 public class RaceSimulatorThread extends Thread {
-    private RaceService raceService;
+    private final RaceService raceService;
+    private final List<Future> threadDoneCheck;
+    private final ThreadPoolTaskExecutor taskExecutor;
+    private final ApplicationContext applicationContext;
     private Map<Long, VehicleSimulatorThread> vehicleSimulators;
-    private List<Future> threadDoneCheck;
     private Long raceId;
-    private ThreadPoolTaskExecutor taskExecutor;
-    private ApplicationContext applicationContext;
 
     @Autowired
     public RaceSimulatorThread(

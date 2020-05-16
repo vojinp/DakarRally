@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleMapperImpl implements VehicleMapper {
-    private VehicleStatisticMapper vehicleStatisticMapper;
+    private final VehicleStatisticMapper vehicleStatisticMapper;
 
     @Autowired
     public VehicleMapperImpl(VehicleStatisticMapper vehicleStatisticMapper) {

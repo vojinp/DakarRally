@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
         value = "Vehicle Management System",
         description = "Operations pertaining to vehicle in Vehicle Management System")
 public class VehicleController {
-    private VehicleService vehicleService;
+    private final VehicleService vehicleService;
 
     @Autowired
     public VehicleController(VehicleService vehicleService) {

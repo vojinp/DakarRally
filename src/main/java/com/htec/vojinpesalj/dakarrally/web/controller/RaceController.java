@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
         value = "Race Management System",
         description = "Operations pertaining to race in Race Management System")
 public class RaceController {
-    private RaceService raceService;
+    private final RaceService raceService;
 
     @Autowired
     public RaceController(RaceService raceService) {

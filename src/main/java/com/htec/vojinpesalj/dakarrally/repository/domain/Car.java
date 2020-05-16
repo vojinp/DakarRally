@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @DiscriminatorValue(value = VehicleTypes.CAR)
-public abstract class Car extends Vehicle {
-    public Car(
-            String teamName,
-            String model,
-            Date manufacturingDate,
-            VehicleStatistic vehicleStatistic) {
+abstract class Car extends Vehicle {
+    Car(
+        String teamName,
+        String model,
+        Date manufacturingDate,
+        VehicleStatistic vehicleStatistic) {
         super(teamName, model, manufacturingDate, vehicleStatistic);
     }
 }

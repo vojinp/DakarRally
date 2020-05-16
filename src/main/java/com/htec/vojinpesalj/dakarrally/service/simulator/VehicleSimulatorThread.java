@@ -19,10 +19,10 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 @Log4j2
 public class VehicleSimulatorThread extends Thread {
-    private VehicleRepository vehicleRepository;
+    private final VehicleRepository vehicleRepository;
+    private final Random random;
     private Vehicle vehicle;
     private Boolean vehicleRemovedFromRace;
-    private Random random;
 
     @Autowired
     public VehicleSimulatorThread(VehicleRepository vehicleRepository) {
