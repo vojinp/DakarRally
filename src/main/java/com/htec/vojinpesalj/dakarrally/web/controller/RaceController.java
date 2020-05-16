@@ -6,6 +6,7 @@ import com.htec.vojinpesalj.dakarrally.service.dto.RaceStatisticResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.extern.log4j.Log4j2;
@@ -34,7 +35,10 @@ public class RaceController {
     }
 
     @PostMapping("")
-    @ApiOperation(value = "Create new race", response = RaceResponse.class)
+    @ApiOperation(
+            value = "Create new race",
+            response = RaceResponse.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<RaceResponse> create(
             @ApiParam(value = "Year when race is held", required = true) @RequestParam Integer year)
             throws URISyntaxException {
@@ -46,7 +50,9 @@ public class RaceController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Start the race")
+    @ApiOperation(
+            value = "Start the race",
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity start(
             @ApiParam(value = "Id of the race which is going to start", required = true)
                     @PathVariable
@@ -58,7 +64,10 @@ public class RaceController {
     }
 
     @GetMapping("/{id}/statistic")
-    @ApiOperation(value = "View statistic of the race", response = RaceStatisticResponse.class)
+    @ApiOperation(
+            value = "View statistic of the race",
+            response = RaceStatisticResponse.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<RaceStatisticResponse> getStatus(
             @ApiParam(value = "Id of the race for statistic", required = true) @PathVariable
                     Long id) {

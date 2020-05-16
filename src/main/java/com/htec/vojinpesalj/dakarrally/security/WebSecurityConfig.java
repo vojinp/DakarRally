@@ -70,6 +70,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**")
                 .permitAll()
                 .antMatchers(
+                        "/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html**",
+                        "/webjars/**")
+                .permitAll()
+                .antMatchers(
                         "/api/races/{\\d+}/statistic",
                         "/api/vehicles/{\\d+}/statistic",
                         "/api/races/{\\d+}/vehicles/leaderboard")

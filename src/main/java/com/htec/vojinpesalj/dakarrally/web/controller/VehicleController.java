@@ -9,6 +9,7 @@ import com.htec.vojinpesalj.dakarrally.service.dto.VehicleTypeDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -41,7 +42,10 @@ public class VehicleController {
     }
 
     @PutMapping("/vehicles/{id}")
-    @ApiOperation(value = "Update properties of the vehicle", response = VehicleResponse.class)
+    @ApiOperation(
+            value = "Update properties of the vehicle",
+            response = VehicleResponse.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<VehicleResponse> update(
             @ApiParam(value = "Vehicle Id to update vehicle object", required = true) @PathVariable
                     Long id,
@@ -54,7 +58,9 @@ public class VehicleController {
     }
 
     @DeleteMapping("/vehicles/{id}")
-    @ApiOperation(value = "Remove vehicle from the race")
+    @ApiOperation(
+            value = "Remove vehicle from the race",
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity delete(
             @ApiParam(value = "Vehicle Id to remove from the race", required = true) @PathVariable
                     Long id) {
@@ -65,7 +71,10 @@ public class VehicleController {
     }
 
     @PutMapping("vehicles/filter")
-    @ApiOperation(value = "Find vehicle", response = List.class)
+    @ApiOperation(
+            value = "Find vehicle",
+            response = List.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<List<VehicleResponse>> finVehicle(
             @ApiParam(value = "Filters that are used to find vehicle", required = true)
                     @Valid
@@ -78,7 +87,10 @@ public class VehicleController {
     }
 
     @GetMapping("vehicles/{vehicleId}/statistic")
-    @ApiOperation(value = "Get statistic of the vehicle", response = VehicleStatisticResponse.class)
+    @ApiOperation(
+            value = "Get statistic of the vehicle",
+            response = VehicleStatisticResponse.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<VehicleStatisticResponse> getStatistic(
             @ApiParam(value = "Id of the vehicle to get statistic", required = true) @PathVariable
                     Long vehicleId) {
@@ -89,7 +101,10 @@ public class VehicleController {
     }
 
     @PostMapping("/races/{raceId}/vehicles")
-    @ApiOperation(value = "Add new vehicle to the race", response = VehicleResponse.class)
+    @ApiOperation(
+            value = "Add new vehicle to the race",
+            response = VehicleResponse.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<VehicleResponse> create(
             @ApiParam(value = "Id of the race", required = true) @PathVariable Long raceId,
             @ApiParam(value = "Body of the vehicle", required = true) @Valid @RequestBody
@@ -103,7 +118,10 @@ public class VehicleController {
     }
 
     @GetMapping("races/{raceId}/vehicles/leaderboard")
-    @ApiOperation(value = "Get the leaderboard of the race", response = List.class)
+    @ApiOperation(
+            value = "Get the leaderboard of the race",
+            response = List.class,
+            authorizations = {@Authorization(value = "jwtToken")})
     public ResponseEntity<List<VehicleResponse>> getLeaderboard(
             @ApiParam(value = "Type of the vehicle", required = true)
                     @RequestParam(required = false)

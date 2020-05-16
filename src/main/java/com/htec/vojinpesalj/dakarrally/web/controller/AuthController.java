@@ -3,7 +3,6 @@ package com.htec.vojinpesalj.dakarrally.web.controller;
 import com.htec.vojinpesalj.dakarrally.service.UserService;
 import com.htec.vojinpesalj.dakarrally.service.dto.AuthenticateRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.AuthenticateResponse;
-import com.htec.vojinpesalj.dakarrally.service.dto.RaceResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.RegisterUserRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    @ApiOperation(value = "Log in", response = RaceResponse.class)
+    @ApiOperation(value = "Log in", response = AuthenticateResponse.class)
     public ResponseEntity<AuthenticateResponse> authenticate(
             @ApiParam(value = "Username and password", required = true) @Valid @RequestBody
                     AuthenticateRequest user) {
@@ -42,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    @ApiOperation(value = "Register new user", response = RaceResponse.class)
+    @ApiOperation(value = "Register new user")
     public ResponseEntity registerUser(
             @ApiParam(value = "User information", required = true) @Valid @RequestBody
                     RegisterUserRequest user) {

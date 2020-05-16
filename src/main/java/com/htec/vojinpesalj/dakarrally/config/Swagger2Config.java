@@ -1,11 +1,13 @@
 package com.htec.vojinpesalj.dakarrally.config;
 
+import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -22,7 +24,8 @@ public class Swagger2Config {
                                 "com.htec.vojinpesalj.dakarrally.web.controller"))
                 .paths(PathSelectors.regex("/.*"))
                 .build()
-                .apiInfo(apiEndPointsInfo());
+                .apiInfo(apiEndPointsInfo())
+                .securitySchemes(Collections.singletonList(apiKey()));
     }
 
     private ApiInfo apiEndPointsInfo() {
@@ -30,5 +33,9 @@ public class Swagger2Config {
                 .title("Dakar rally REST API")
                 .description("Api for the dakar rally application.")
                 .build();
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("jwtToken", "Authorization", "header");
     }
 }

@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
+// @Data
 @AllArgsConstructor
 public class UserPrinciple implements UserDetails {
     private static final long serialVersionUID = 1L;
