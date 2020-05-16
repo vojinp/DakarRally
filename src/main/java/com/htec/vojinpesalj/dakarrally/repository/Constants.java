@@ -44,9 +44,11 @@ public final class Constants {
         public static final String VEHICLE_TYPE_NOT_SUPPORTED = "Vehicle type is not supported.";
         public static final String RACE_STATUS_NOT_SUPPORTED = "Race status is not supported.";
         public static final String ENTITY_WITH_ID_NOT_FOUND = "%s with id: %d was not found.";
+        public static final String ROLE_NOT_FOUND = "Role with name: %s was not found.";
         public static final String CANT_UPDATE_VEHICLE =
                 "Can't update vehicle with id: %d while race is running.";
         public static final String RACE_ALREADY_STARTED = "Race with id: %d already started.";
+        public static final String USER_ALREADY_EXISTS = "User with username: %s already exists.";
     }
 
     public static class ThreadInfo {

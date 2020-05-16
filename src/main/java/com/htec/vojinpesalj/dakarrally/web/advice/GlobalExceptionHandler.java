@@ -3,6 +3,7 @@ package com.htec.vojinpesalj.dakarrally.web.advice;
 import com.htec.vojinpesalj.dakarrally.exception.CantUpdateVehicleException;
 import com.htec.vojinpesalj.dakarrally.exception.EntityNotFoundException;
 import com.htec.vojinpesalj.dakarrally.exception.RaceAlreadyStartedException;
+import com.htec.vojinpesalj.dakarrally.exception.UserAlreadyExistsException;
 import com.htec.vojinpesalj.dakarrally.web.vm.ErrorCode;
 import com.htec.vojinpesalj.dakarrally.web.vm.ErrorViewModel;
 import org.springframework.http.HttpHeaders;
@@ -63,6 +64,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST,
+                webRequest);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<Object> handleUserAlreadyExists(
+            WebRequest webRequest, UserAlreadyExistsException ex) {
+        return handleExceptionInternal(
+                ex,
+                new ErrorViewModel(ex.getMessage(), ErrorCode.CONFLICT),
+                new HttpHeaders(),
+                HttpStatus.CONFLICT,
                 webRequest);
     }
 }
