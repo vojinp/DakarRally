@@ -3,6 +3,9 @@ package com.htec.vojinpesalj.dakarrally.web.controller;
 import com.htec.vojinpesalj.dakarrally.service.RaceService;
 import com.htec.vojinpesalj.dakarrally.service.dto.RaceResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.RaceStatisticResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.net.URI;
 import java.net.URISyntaxException;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/races")
 @Log4j2
+@Api(
+        value = "Race Management System",
+        description = "Operations pertaining to race in Race Management System")
 public class RaceController {
     private RaceService raceService;
 
@@ -28,7 +34,9 @@ public class RaceController {
     }
 
     @PostMapping("")
-    public ResponseEntity<RaceResponse> create(@RequestParam Integer year)
+    @ApiOperation(value = "Create new race", response = RaceResponse.class)
+    public ResponseEntity<RaceResponse> create(
+            @ApiParam(value = "Year when race is held", required = true) @RequestParam Integer year)
             throws URISyntaxException {
         log.info("POST /api/races");
         RaceResponse race = raceService.create(year);
@@ -38,7 +46,11 @@ public class RaceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RaceResponse> start(@PathVariable Long id) {
+    @ApiOperation(value = "Start the race")
+    public ResponseEntity start(
+            @ApiParam(value = "Id of the race which is going to start", required = true)
+                    @PathVariable
+                    Long id) {
         log.info(String.format("PUT /api/races/%d", id));
         raceService.startRace(id);
 
@@ -46,7 +58,10 @@ public class RaceController {
     }
 
     @GetMapping("/{id}/statistic")
-    public ResponseEntity<RaceStatisticResponse> getStatus(@PathVariable Long id) {
+    @ApiOperation(value = "View statistic of the race", response = RaceStatisticResponse.class)
+    public ResponseEntity<RaceStatisticResponse> getStatus(
+            @ApiParam(value = "Id of the race for statistic", required = true) @PathVariable
+                    Long id) {
         log.info(String.format("GET /api/races/%d/statistic", id));
         RaceStatisticResponse raceStatisticResponse = raceService.getStatistic(id);
 

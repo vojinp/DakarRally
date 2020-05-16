@@ -6,6 +6,9 @@ import com.htec.vojinpesalj.dakarrally.service.dto.VehicleRequest;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleStatisticResponse;
 import com.htec.vojinpesalj.dakarrally.service.dto.VehicleTypeDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -26,6 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @Log4j2
+@Api(
+        value = "Vehicle Management System",
+        description = "Operations pertaining to vehicle in Vehicle Management System")
 public class VehicleController {
     private VehicleService vehicleService;
 
@@ -35,8 +41,12 @@ public class VehicleController {
     }
 
     @PutMapping("/vehicles/{id}")
+    @ApiOperation(value = "Update properties of the vehicle", response = VehicleResponse.class)
     public ResponseEntity<VehicleResponse> update(
-            @PathVariable Long id, @Valid @RequestBody VehicleRequest vehicleRequest) {
+            @ApiParam(value = "Vehicle Id to update vehicle object", required = true) @PathVariable
+                    Long id,
+            @ApiParam(value = "Update vehicle object", required = true) @Valid @RequestBody
+                    VehicleRequest vehicleRequest) {
         log.info(String.format("PUT /api/vehicles/%d", id));
         VehicleResponse vehicle = vehicleService.update(vehicleRequest, id);
 
@@ -44,7 +54,10 @@ public class VehicleController {
     }
 
     @DeleteMapping("/vehicles/{id}")
-    public ResponseEntity<VehicleResponse> delete(@PathVariable Long id) {
+    @ApiOperation(value = "Remove vehicle from the race")
+    public ResponseEntity delete(
+            @ApiParam(value = "Vehicle Id to remove from the race", required = true) @PathVariable
+                    Long id) {
         log.info(String.format("DELETE /api/vehicles/%d", id));
         vehicleService.delete(id);
 
@@ -52,8 +65,12 @@ public class VehicleController {
     }
 
     @PutMapping("vehicles/filter")
+    @ApiOperation(value = "Find vehicle", response = List.class)
     public ResponseEntity<List<VehicleResponse>> finVehicle(
-            @Valid @RequestBody FindVehicleRequest findVehicleRequest) {
+            @ApiParam(value = "Filters that are used to find vehicle", required = true)
+                    @Valid
+                    @RequestBody
+                    FindVehicleRequest findVehicleRequest) {
         log.info("PUT /api/vehicles/filter");
         List<VehicleResponse> vehicles = vehicleService.findVehicle(findVehicleRequest);
 
@@ -61,7 +78,10 @@ public class VehicleController {
     }
 
     @GetMapping("vehicles/{vehicleId}/statistic")
-    public ResponseEntity<VehicleStatisticResponse> getStatistic(@PathVariable Long vehicleId) {
+    @ApiOperation(value = "Get statistic of the vehicle", response = VehicleStatisticResponse.class)
+    public ResponseEntity<VehicleStatisticResponse> getStatistic(
+            @ApiParam(value = "Id of the vehicle to get statistic", required = true) @PathVariable
+                    Long vehicleId) {
         log.info(String.format("GET /api/vehicles/%d/statistic", vehicleId));
         VehicleStatisticResponse vehicleStatistic = vehicleService.getStatistic(vehicleId);
 
@@ -69,8 +89,11 @@ public class VehicleController {
     }
 
     @PostMapping("/races/{raceId}/vehicles")
+    @ApiOperation(value = "Add new vehicle to the race", response = VehicleResponse.class)
     public ResponseEntity<VehicleResponse> create(
-            @PathVariable Long raceId, @Valid @RequestBody VehicleRequest vehicleRequest)
+            @ApiParam(value = "Id of the race", required = true) @PathVariable Long raceId,
+            @ApiParam(value = "Body of the vehicle", required = true) @Valid @RequestBody
+                    VehicleRequest vehicleRequest)
             throws URISyntaxException {
         log.info(String.format("POST /api/races/%d/vehicles", raceId));
         VehicleResponse vehicle = vehicleService.create(vehicleRequest, raceId);
@@ -80,8 +103,12 @@ public class VehicleController {
     }
 
     @GetMapping("races/{raceId}/vehicles/leaderboard")
+    @ApiOperation(value = "Get the leaderboard of the race", response = List.class)
     public ResponseEntity<List<VehicleResponse>> getLeaderboard(
-            @RequestParam(required = false) VehicleTypeDto type, @PathVariable Long raceId) {
+            @ApiParam(value = "Type of the vehicle", required = true)
+                    @RequestParam(required = false)
+                    VehicleTypeDto type,
+            @ApiParam(value = "Id of the race", required = true) @PathVariable Long raceId) {
         log.info(String.format("GET /api/races/%d/vehicles/leaderboard", raceId));
         List<VehicleResponse> leaderboard = vehicleService.getLeaderboard(raceId, type);
 
