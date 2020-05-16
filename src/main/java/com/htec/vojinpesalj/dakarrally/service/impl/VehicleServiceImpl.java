@@ -161,6 +161,7 @@ public class VehicleServiceImpl implements VehicleService {
         Specification<Vehicle> vehicleSpecification =
                 vehicleSpecifications.stream().findFirst().orElse(null);
         for (int i = 0; i <= vehicleSpecifications.size() - 2; i++) {
+            assert vehicleSpecification != null;
             vehicleSpecification =
                     findVehicleRequest.getFilterOperations().get(i).equals(FilterOperation.AND)
                             ? vehicleSpecification.and(vehicleSpecifications.get(i + 1))

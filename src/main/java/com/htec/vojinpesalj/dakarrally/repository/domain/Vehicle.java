@@ -2,7 +2,6 @@ package com.htec.vojinpesalj.dakarrally.repository.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -57,23 +56,6 @@ public abstract class Vehicle {
         this.model = model;
         this.manufacturingDate = manufacturingDate;
         this.vehicleStatistic = vehicleStatistic;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        Vehicle vehicle = (Vehicle) o;
-        return Objects.equals(id, vehicle.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     public abstract Integer getMaxSpeed();
