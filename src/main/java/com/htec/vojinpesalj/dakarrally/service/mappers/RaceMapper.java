@@ -4,5 +4,5 @@ import com.htec.vojinpesalj.dakarrally.repository.domain.Race;
 import com.htec.vojinpesalj.dakarrally.service.dto.RaceResponse;
 
 public interface RaceMapper {
-  RaceResponse toDto(Race race);
+    RaceResponse toDto(Race race);
 }

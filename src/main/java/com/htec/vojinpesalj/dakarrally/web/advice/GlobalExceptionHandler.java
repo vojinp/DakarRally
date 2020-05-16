@@ -46,23 +46,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CantUpdateVehicleException.class)
     public ResponseEntity<Object> handleCantUpdateVehicle(
-        WebRequest webRequest, EntityNotFoundException ex) {
+            WebRequest webRequest, EntityNotFoundException ex) {
         return handleExceptionInternal(
-            ex,
-            new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
-            new HttpHeaders(),
-            HttpStatus.BAD_REQUEST,
-            webRequest);
+                ex,
+                new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest);
     }
 
     @ExceptionHandler(RaceAlreadyStartedException.class)
     public ResponseEntity<Object> handleRaceAlreadyStarted(
-        WebRequest webRequest, EntityNotFoundException ex) {
+            WebRequest webRequest, EntityNotFoundException ex) {
         return handleExceptionInternal(
-            ex,
-            new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
-            new HttpHeaders(),
-            HttpStatus.BAD_REQUEST,
-            webRequest);
+                ex,
+                new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest);
     }
 }

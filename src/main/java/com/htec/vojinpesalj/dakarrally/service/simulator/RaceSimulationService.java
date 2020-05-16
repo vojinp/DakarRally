@@ -2,7 +2,6 @@ package com.htec.vojinpesalj.dakarrally.service.simulator;
 
 import com.htec.vojinpesalj.dakarrally.repository.domain.Race;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
-import java.util.Map;
 
 public interface RaceSimulationService {
     void addRace(Race race);

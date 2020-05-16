@@ -64,7 +64,9 @@ public class VehicleSimulatorThread extends Thread {
                             / ((double) ThreadInfo.HOUR_IN_MS / ThreadInfo.SLEEP_TIME);
 
             if (random.nextDouble() <= lightMalfunctionProbability) {
-                log.info(String.format("Vehicle with id: %d has light malfunction.", vehicle.getId()));
+                log.info(
+                        String.format(
+                                "Vehicle with id: %d has light malfunction.", vehicle.getId()));
                 vehicleStatistic.setStatus(VehicleStatus.LIGHT_MALFUNCTIONED);
                 vehicleStatistic.getLightMalfunctions().add(new Date());
                 vehicleRepository.save(vehicle);
@@ -76,7 +78,9 @@ public class VehicleSimulatorThread extends Thread {
                             / ((double) ThreadInfo.HOUR_IN_MS / ThreadInfo.SLEEP_TIME);
 
             if (random.nextDouble() <= heavyMalfunctionProbability) {
-                log.info(String.format("Vehicle with id: %d has heavy malfunction.", vehicle.getId()));
+                log.info(
+                        String.format(
+                                "Vehicle with id: %d has heavy malfunction.", vehicle.getId()));
                 vehicleStatistic.setStatus(VehicleStatus.HEAVY_MALFUNCTIONED);
                 vehicleRepository.save(vehicle);
             }
@@ -103,7 +107,9 @@ public class VehicleSimulatorThread extends Thread {
     }
 
     public void removeFromRace() {
-        log.info(String.format("Vehicle with id: %d has been removed from the race.", vehicle.getId()));
+        log.info(
+                String.format(
+                        "Vehicle with id: %d has been removed from the race.", vehicle.getId()));
 
         this.vehicleRemovedFromRace = true;
     }

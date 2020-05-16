@@ -1,6 +1,5 @@
 package com.htec.vojinpesalj.dakarrally.repository.specification;
 
-import com.htec.vojinpesalj.dakarrally.service.dto.FilterKeys;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;

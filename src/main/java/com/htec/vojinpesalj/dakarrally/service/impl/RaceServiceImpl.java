@@ -110,7 +110,7 @@ public class RaceServiceImpl implements RaceService {
     }
 
     private Race getByIdOrThrowException(Long id) {
-        Race race =  raceRepository.findById(id).orElseThrow(() -> new RaceNotFoundException(id));
+        Race race = raceRepository.findById(id).orElseThrow(() -> new RaceNotFoundException(id));
         log.info(String.format("Fetched race with id: %d from the database.", id));
 
         return race;

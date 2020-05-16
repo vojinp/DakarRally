@@ -173,7 +173,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private Vehicle getByIdOrThrow(Long id) {
-        Vehicle vehicle =  vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
+        Vehicle vehicle =
+                vehicleRepository.findById(id).orElseThrow(() -> new VehicleNotFoundException(id));
         log.info(String.format("Fetched vehicle with id: %d from the database.", id));
 
         return vehicle;
