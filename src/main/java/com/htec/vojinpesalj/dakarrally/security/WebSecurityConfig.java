@@ -80,7 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/api/races/{\\d+}/statistic",
                         "/api/vehicles/{\\d+}/statistic",
-                        "/api/races/{\\d+}/vehicles/leaderboard")
+                        "/api/races/{\\d+}/vehicles/leaderboard",
+                        "/api/vehicles/filter")
                 .hasAnyRole("USER", "ADMIN")
                 .anyRequest()
                 .hasRole("ADMIN")

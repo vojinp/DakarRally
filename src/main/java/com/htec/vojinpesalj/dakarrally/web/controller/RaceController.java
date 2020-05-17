@@ -60,7 +60,7 @@ public class RaceController {
         log.info(String.format("PUT /api/races/%d", id));
         raceService.startRace(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/statistic")
@@ -68,7 +68,7 @@ public class RaceController {
             value = "View statistic of the race",
             response = RaceStatisticResponse.class,
             authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<RaceStatisticResponse> getStatus(
+    public ResponseEntity<RaceStatisticResponse> getStatistic(
             @ApiParam(value = "Id of the race for statistic", required = true) @PathVariable
                     Long id) {
         log.info(String.format("GET /api/races/%d/statistic", id));

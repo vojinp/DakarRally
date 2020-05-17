@@ -1,7 +1,9 @@
 package com.htec.vojinpesalj.dakarrally.web.advice;
 
+import com.htec.vojinpesalj.dakarrally.exception.CantAddVehicleException;
 import com.htec.vojinpesalj.dakarrally.exception.CantUpdateVehicleException;
 import com.htec.vojinpesalj.dakarrally.exception.EntityNotFoundException;
+import com.htec.vojinpesalj.dakarrally.exception.InvalidNumberOfParametersException;
 import com.htec.vojinpesalj.dakarrally.exception.RaceAlreadyStartedException;
 import com.htec.vojinpesalj.dakarrally.exception.UserAlreadyExistsException;
 import com.htec.vojinpesalj.dakarrally.web.vm.ErrorCode;
@@ -47,7 +49,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CantUpdateVehicleException.class)
     public ResponseEntity<Object> handleCantUpdateVehicle(
-            WebRequest webRequest, EntityNotFoundException ex) {
+            WebRequest webRequest, CantUpdateVehicleException ex) {
+        return handleExceptionInternal(
+                ex,
+                new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest);
+    }
+
+    @ExceptionHandler(CantAddVehicleException.class)
+    public ResponseEntity<Object> handleCantAddVehicle(
+            WebRequest webRequest, CantAddVehicleException ex) {
         return handleExceptionInternal(
                 ex,
                 new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
@@ -58,7 +71,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RaceAlreadyStartedException.class)
     public ResponseEntity<Object> handleRaceAlreadyStarted(
-            WebRequest webRequest, EntityNotFoundException ex) {
+            WebRequest webRequest, RaceAlreadyStartedException ex) {
+        return handleExceptionInternal(
+                ex,
+                new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest);
+    }
+
+    @ExceptionHandler(InvalidNumberOfParametersException.class)
+    public ResponseEntity<Object> handleInvalidNumberOfParameters(
+            WebRequest webRequest, InvalidNumberOfParametersException ex) {
         return handleExceptionInternal(
                 ex,
                 new ErrorViewModel(ex.getMessage(), ErrorCode.BAD_REQUEST),

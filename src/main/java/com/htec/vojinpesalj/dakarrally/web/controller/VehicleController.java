@@ -67,7 +67,7 @@ public class VehicleController {
         log.info(String.format("DELETE /api/vehicles/%d", id));
         vehicleService.delete(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("vehicles/filter")
@@ -75,7 +75,7 @@ public class VehicleController {
             value = "Find vehicle",
             response = List.class,
             authorizations = {@Authorization(value = "jwtToken")})
-    public ResponseEntity<List<VehicleResponse>> finVehicle(
+    public ResponseEntity<List<VehicleResponse>> findVehicle(
             @ApiParam(value = "Filters that are used to find vehicle", required = true)
                     @Valid
                     @RequestBody

@@ -45,6 +45,7 @@ public abstract class Vehicle {
     private Race race;
 
     @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "vehicle_statistic_id")
     private VehicleStatistic vehicleStatistic;
 
     public Vehicle(

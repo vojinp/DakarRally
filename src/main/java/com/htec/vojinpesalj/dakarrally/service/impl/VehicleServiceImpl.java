@@ -1,10 +1,13 @@
 package com.htec.vojinpesalj.dakarrally.service.impl;
 
+import com.htec.vojinpesalj.dakarrally.exception.CantAddVehicleException;
 import com.htec.vojinpesalj.dakarrally.exception.CantUpdateVehicleException;
+import com.htec.vojinpesalj.dakarrally.exception.InvalidNumberOfParametersException;
 import com.htec.vojinpesalj.dakarrally.exception.RaceNotFoundException;
 import com.htec.vojinpesalj.dakarrally.exception.VehicleNotFoundException;
 import com.htec.vojinpesalj.dakarrally.repository.RaceRepository;
 import com.htec.vojinpesalj.dakarrally.repository.VehicleRepository;
+import com.htec.vojinpesalj.dakarrally.repository.domain.Race;
 import com.htec.vojinpesalj.dakarrally.repository.domain.RaceStatus;
 import com.htec.vojinpesalj.dakarrally.repository.domain.Vehicle;
 import com.htec.vojinpesalj.dakarrally.repository.specification.SearchCriteria;
@@ -62,11 +65,17 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleResponse create(VehicleRequest vehicleRequest, Long raceId) {
-        Vehicle vehicle = vehicleFactory.createVehicle(vehicleRequest);
-        vehicle.setRace(
+        Race race =
                 raceRepository
                         .findById(raceId)
-                        .orElseThrow(() -> new RaceNotFoundException(raceId)));
+                        .orElseThrow(() -> new RaceNotFoundException(raceId));
+
+        if (race.getStatus() != RaceStatus.PENDING) {
+            throw new CantAddVehicleException(raceId);
+        }
+
+        Vehicle vehicle = vehicleFactory.createVehicle(vehicleRequest);
+        vehicle.setRace(race);
         Vehicle newVehicle = vehicleRepository.save(vehicle);
         log.info(String.format("Saved vehicle with id: %d to database.", newVehicle.getId()));
 
@@ -84,6 +93,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         Vehicle newVehicle = vehicleFactory.createVehicle(vehicleRequest);
         newVehicle.setRace(vehicle.getRace());
+        newVehicle.setVehicleStatistic(vehicle.getVehicleStatistic());
         newVehicle.setId(id);
         vehicleRepository.save(newVehicle);
         log.info(String.format("Saved race with id: %d to database.", newVehicle.getId()));
@@ -110,18 +120,25 @@ public class VehicleServiceImpl implements VehicleService {
                         .orElseGet(() -> vehicleRepository.findByRaceId(raceId));
         log.info(String.format("Fetched vehicles with race id: %d from the database.", raceId));
 
-        vehicleRepository.findByRaceId(raceId);
-        Map<Long, VehicleSimulatorThread> vehicleSimulators =
-                raceSimulationService.getRaceSimulation(raceId).getVehicleSimulators();
-        vehicles.forEach(
-                v ->
-                        v.getVehicleStatistic()
-                                .setDistance(
-                                        vehicleSimulators
-                                                .get(v.getId())
-                                                .getVehicle()
-                                                .getVehicleStatistic()
-                                                .getDistance()));
+        // Calculating vehicle distance if the race is running
+        if (raceRepository
+                        .findById(raceId)
+                        .orElseThrow(() -> new RaceNotFoundException(raceId))
+                        .getStatus()
+                == RaceStatus.RUNNING) {
+            Map<Long, VehicleSimulatorThread> vehicleSimulators =
+                    raceSimulationService.getRaceSimulation(raceId).getVehicleSimulators();
+            vehicles.forEach(
+                    v ->
+                            v.getVehicleStatistic()
+                                    .setDistance(
+                                            vehicleSimulators
+                                                    .get(v.getId())
+                                                    .getVehicle()
+                                                    .getVehicleStatistic()
+                                                    .getDistance()));
+        }
+
         vehicles.sort(
                 Comparator.comparing((Vehicle v) -> v.getVehicleStatistic().getDistance())
                         .reversed());
@@ -132,19 +149,30 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleStatisticResponse getStatistic(Long id) {
         Vehicle vehicle = getByIdOrThrow(id);
-        Map<Long, VehicleSimulatorThread> vehicleSimulators =
-                raceSimulationService
-                        .getRaceSimulation(vehicle.getRace().getId())
-                        .getVehicleSimulators();
-        vehicle.getVehicleStatistic()
-                .setDistance(
-                        vehicleSimulators.get(id).getVehicle().getVehicleStatistic().getDistance());
+
+        // Calculating distance if the vehicle is running
+        if (vehicle.getRace().getStatus() == RaceStatus.RUNNING) {
+            Map<Long, VehicleSimulatorThread> vehicleSimulators =
+                    raceSimulationService
+                            .getRaceSimulation(vehicle.getRace().getId())
+                            .getVehicleSimulators();
+            vehicle.getVehicleStatistic()
+                    .setDistance(
+                            vehicleSimulators
+                                    .get(id)
+                                    .getVehicle()
+                                    .getVehicleStatistic()
+                                    .getDistance());
+        }
 
         return vehicleStatisticMapper.toDto(vehicle.getVehicleStatistic());
     }
 
     @Override
     public List<VehicleResponse> findVehicle(FindVehicleRequest findVehicleRequest) {
+        validateFindVehicleRequest(findVehicleRequest);
+
+        // Creating vehicle specifications
         List<VehicleSpecification> vehicleSpecifications =
                 IntStream.range(0, findVehicleRequest.getFilterKeys().size())
                         .mapToObj(
@@ -160,6 +188,8 @@ public class VehicleServiceImpl implements VehicleService {
                                                         findVehicleRequest.getFilterValues().get(i),
                                                         findVehicleRequest.getSortBy().getValue())))
                         .collect(Collectors.toList());
+
+        // Concatenating vehicle specifications
         Specification<Vehicle> vehicleSpecification =
                 vehicleSpecifications.stream().findFirst().orElse(null);
         for (int i = 0; i <= vehicleSpecifications.size() - 2; i++) {
@@ -173,6 +203,18 @@ public class VehicleServiceImpl implements VehicleService {
         List<Vehicle> vehicles = vehicleRepository.findAll(vehicleSpecification);
 
         return vehicles.stream().map(vehicleMapper::toDto).collect(Collectors.toList());
+    }
+
+    private void validateFindVehicleRequest(FindVehicleRequest findVehicleRequest) {
+        if ((findVehicleRequest.getFilterKeys().size()
+                                != findVehicleRequest.getFilterValues().size()
+                        || findVehicleRequest.getFilterValues().size() - 1
+                                != findVehicleRequest.getFilterOperations().size())
+                && (findVehicleRequest.getFilterKeys().size() != 0
+                        || findVehicleRequest.getFilterValues().size() != 0
+                        || findVehicleRequest.getFilterOperations().size() != 0)) {
+            throw new InvalidNumberOfParametersException();
+        }
     }
 
     private Vehicle getByIdOrThrow(Long id) {

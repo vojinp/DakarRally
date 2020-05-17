@@ -49,6 +49,10 @@ public final class Constants {
                 "Can't update vehicle with id: %d while race is running.";
         public static final String RACE_ALREADY_STARTED = "Race with id: %d already started.";
         public static final String USER_ALREADY_EXISTS = "User with username: %s already exists.";
+        public static final String INVALID_NUMBER_OF_PARAMETERS =
+                "Number of keys and values must be the same, and number of operations should be less by one.";
+        public static final String CANT_ADD_VEHICLE_TO_RACE =
+                "Can't add vehicle to race with id: %d, because the race already started.";
     }
 
     public static class ThreadInfo {

@@ -100,6 +100,7 @@ public class VehicleSimulatorThread extends Thread {
             }
         }
         if (isFinished()) {
+            vehicle.getVehicleStatistic().setDistance(Double.valueOf(Constants.RACE_DISTANCE));
             vehicle.getVehicleStatistic().setFinishTime(new Date());
             vehicleRepository.save(vehicle);
         }
